@@ -336,6 +336,7 @@ while runLoop && frameCount < 4000
 %                else
 %                    out = set_status(flag);
 %                end
+               if flag~=-1
                out = set_status(flag);
                disp1 = out(1);
                drawnow();
@@ -347,6 +348,7 @@ while runLoop && frameCount < 4000
                    'FontSize',25,...
                    'String',out(2),...
                    'Position',[350 100 200 200]);
+               end
                %%chang's end
                debug1= ['debug1:' num2str(previousaction) '  ' num2str(flag)];
                disp(debug1);
@@ -464,15 +466,31 @@ operation = {'On/Off', 'Up', 'Down', 'Left', 'Right'};
 
 % get the start/stop commander
 
-if (order == 0 || order == -1)
+% if (order == 0 || order == -1)
+%     % current is off, then start the display
+%     if (switch_status == 0 && order == 0)
+%         switch_status = 1;
+%         menu_item = 0;  % set current menu to be 'temperature'
+%         % now set all the display%%%%%
+%     % current is on, then stop the display
+%     elseif (order==-1)
+%         order=0;
+%         switch_status = 0;
+%         % record all of our display into default
+%         default_temperature = temperature_status;
+%         default_mode = mode_option_item;
+%         default_wind = wind_option_item;
+%     end
+if (order==-1)
+    return;%donothing
+elseif (order == 0)
     % current is off, then start the display
-    if (switch_status == 0 && order == 0)
+    if (switch_status == 0)
         switch_status = 1;
         menu_item = 0;  % set current menu to be 'temperature'
         % now set all the display%%%%%
     % current is on, then stop the display
-    elseif (order==-1)
-        order=0;
+    else
         switch_status = 0;
         % record all of our display into default
         default_temperature = temperature_status;
@@ -519,6 +537,7 @@ disp(operation_str);
 disp(varoutput_str); 
 
 varoutput = {varoutput, cell2mat(operation(order+1))};
+
 end
 
 function var = check_switch_status()
